@@ -6,9 +6,10 @@ using UnityEngine;
 public class VegetableInstance : MonoBehaviour
 {
     public Vegetable _vegetableData;
-    private VegetableState _currentState = VegetableState.Idle;
+    public VegetableState _currentState = VegetableState.Idle;
     public event Action onPickedUp;
 
+    //This method can be called via the Player script while picking up the vegetable
     public void PickUp()
     {
         if(_currentState == VegetableState.Idle)
@@ -18,8 +19,17 @@ public class VegetableInstance : MonoBehaviour
         }
     }
 
+    //This method can be called via the Player script while placing the vegetable on the Chopping board
+    public void PlaceOnChoppingBoard()
+    {
+        if(_currentState == VegetableState.Carried)
+        {
+            UpdateState(VegetableState.Chopping);
+        }
+    }
+
     //Update the state of the vegetable
-    private void UpdateState(VegetableState newState)
+    public void UpdateState(VegetableState newState)
     {
         _currentState = newState;
 
@@ -34,5 +44,11 @@ public class VegetableInstance : MonoBehaviour
             case VegetableState.Chopped:
                 break;
         }
+    }
+
+
+    public void ResetVegetable()
+    {
+        UpdateState(VegetableState.Idle);
     }
 }

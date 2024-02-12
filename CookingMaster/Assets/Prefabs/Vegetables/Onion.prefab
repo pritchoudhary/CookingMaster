@@ -96,7 +96,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-3624734818369226781
 MonoBehaviour:
@@ -111,3 +111,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _vegetableData: {fileID: 11400000, guid: efa13c7e520ec7844a3480e8ac854095, type: 2}
+  _currentState: 0
