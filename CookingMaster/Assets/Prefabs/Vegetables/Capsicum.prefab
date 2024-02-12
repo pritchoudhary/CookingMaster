@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3129385209677215184}
   - component: {fileID: 2849392267226360951}
   - component: {fileID: 6635851623204764867}
+  - component: {fileID: 4448747832309165670}
   m_Layer: 0
   m_Name: Capsicum
   m_TagString: Untagged
@@ -97,3 +98,16 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4448747832309165670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3163981628527896231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8133fcc8669bd9c4781ed58d4db58e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vegetableData: {fileID: 11400000, guid: 819cdd323eee86842ba4e6b9bc38c75a, type: 2}

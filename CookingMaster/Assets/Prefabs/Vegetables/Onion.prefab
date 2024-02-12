@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1393466409973089868}
   - component: {fileID: 4362823775445516880}
   - component: {fileID: 7984003899552746061}
+  - component: {fileID: -3624734818369226781}
   m_Layer: 0
   m_Name: Onion
   m_TagString: Untagged
@@ -97,3 +98,16 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-3624734818369226781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7753949538666721654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8133fcc8669bd9c4781ed58d4db58e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vegetableData: {fileID: 11400000, guid: efa13c7e520ec7844a3480e8ac854095, type: 2}
