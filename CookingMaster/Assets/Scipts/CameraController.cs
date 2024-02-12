@@ -35,7 +35,7 @@ public class CameraController : MonoBehaviour
         Vector3 _centrePoint = GetCentrePointOfPlayers();
 
         //Maintain the camera's y position constant
-        Vector3 _newPosition = new(_centrePoint.x, 50f, _centrePoint.z);
+        Vector3 _newPosition = new(_centrePoint.x, 30f, _centrePoint.z);
 
         transform.position = Vector3.SmoothDamp(transform.position, _newPosition, ref _cameraMoveVelocity, _smoothTime);
     }
@@ -44,7 +44,7 @@ public class CameraController : MonoBehaviour
     private void ZoomCamera()
     {
         float _greatestDistance = GetGreatestDistanceBetweenPlayers();
-        float _newZoom = Mathf.Lerp(_maxZoom, _minZoom, _greatestDistance / _zoomLimiter);
+        float _newZoom = Mathf.Lerp(_minZoom, _maxZoom, _greatestDistance / _zoomLimiter);
         _camera.orthographicSize = Mathf.Clamp(Mathf.Lerp(_camera.orthographicSize, _newZoom, Time.deltaTime),_minZoom,_maxZoom);
     }
 
