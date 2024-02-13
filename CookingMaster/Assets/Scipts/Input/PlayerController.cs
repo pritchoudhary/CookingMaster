@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 _movementInput = Vector2.zero;
     private VegetableInstance[] carriedVegetables = new VegetableInstance[2];
-    private bool _isInteracting = false;
+    private bool _canMove = true;
 
     private void Start()
     {
@@ -49,32 +49,38 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
+        if(_canMove)
         {
-            playerVelocity.y = 0f;
-        }
+            groundedPlayer = controller.isGrounded;
+            if (groundedPlayer && playerVelocity.y < 0)
+            {
+                playerVelocity.y = 0f;
+            }
 
-        Vector3 move = new(_movementInput.x, 0, _movementInput.y);
-        controller.Move(_playerSpeed * Time.deltaTime * move);
-        if (move != Vector3.zero)
-        {
-            gameObject.transform.forward = move;
+            Vector3 move = new(_movementInput.x, 0, _movementInput.y);
+            controller.Move(_playerSpeed * Time.deltaTime * move);
+            if (move != Vector3.zero)
+            {
+                gameObject.transform.forward = move;
+            }
         }
+        
         //controller.Move(playerVelocity * Time.deltaTime);
     }
 
     private bool IsCarryingVegetable()
     {
-        return carriedVegetables[0] != null || carriedVegetables[1] != null;
+        //The player is carrying max vegetables if niether hand is empty
+        return carriedVegetables[0] != null && carriedVegetables[1] != null;
     }
 
     private void TryPlaceVegetableOnChoppingBoard()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f); // Interaction radius
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f); // Interaction radius
         foreach (var hitCollider in hitColliders)
         {
             ChoppingBoard choppingBoard = hitCollider.GetComponent<ChoppingBoard>();
+            Debug.Log("Chopping board found");
             if (choppingBoard != null && choppingBoard.IsAvailable())
             {
                 // Place the first picked vegetable on the chopping board
@@ -82,6 +88,9 @@ public class PlayerController : MonoBehaviour
                 {
                     if (choppingBoard.ChopVegetable(carriedVegetables[0]))
                     {
+                        //Subscribe to chopping board events
+                        choppingBoard.OnChoppingStarted += StopPlayerMovement;
+                        choppingBoard.OnChoppingCompleted += AllowPlayerMovement;
                         RemoveVegetableFromHand(0);
                     }
                     return; // Exit after attempting to place one vegetable
@@ -90,9 +99,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void StopPlayerMovement()
+    {
+        _canMove = false;
+    }
+
+    private void AllowPlayerMovement()
+    {
+        _canMove = true;
+
+        //Unsubscribe from chopping board events to avoid multiple calls
+        ChoppingBoard choppingBoard = carriedVegetables[0].GetComponentInParent<ChoppingBoard>();
+        if(choppingBoard != null)
+        {
+            choppingBoard.OnChoppingStarted -= StopPlayerMovement;
+            choppingBoard.OnChoppingCompleted -= AllowPlayerMovement;
+        }
+    }
+
     private void TryPickUpVegetable()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.0f); // Interaction radius
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f); // Interaction radius
         Debug.Log("Checking for vegetables. Found: " + hitColliders.Length);
         foreach (var hitCollider in hitColliders)
         {
@@ -114,6 +141,7 @@ public class PlayerController : MonoBehaviour
 
     private void PickUpVegetable(VegetableInstance vegetable)
     {
+        //Find the first available hand
         for (int i = 0; i < carriedVegetables.Length; i++)
         {
             if (carriedVegetables[i] == null)
@@ -121,7 +149,7 @@ public class PlayerController : MonoBehaviour
                 carriedVegetables[i] = vegetable;
                 vegetable.PickUp();
                 AttachVegetableToHand(vegetable, i);
-                break;
+                return; //Exit the loop and method after successfully picking up a vegetable
             }
         }
     }
@@ -129,6 +157,7 @@ public class PlayerController : MonoBehaviour
     private void AttachVegetableToHand(VegetableInstance vegetable, int handIndex)
     {
         Vector3 originalScale = vegetable.transform.localScale;
+        Debug.Log("Local Scale: " + originalScale);
 
         Transform handTransform = handIndex == 0 ? _rightHandPosition : _leftHandPosition;
         vegetable.transform.SetParent(handTransform, false);

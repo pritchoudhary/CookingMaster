@@ -1,8 +1,12 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class ChoppingBoard : MonoBehaviour
 {
+    public event Action OnChoppingStarted;
+    public event Action OnChoppingCompleted;
+
     private VegetableInstance _currentVegetable = null;
 
     public bool ChopVegetable(VegetableInstance vegetable)
@@ -22,7 +26,12 @@ public class ChoppingBoard : MonoBehaviour
     
     private IEnumerator ChopVegetableCoroutine(VegetableInstance vegetable)
     {
+        //Chopping has startetd
+        OnChoppingStarted?.Invoke();
         yield return new WaitForSeconds(vegetable._vegetableData._chopTime);
+
+        //Chopping has completed
+        OnChoppingCompleted?.Invoke();
         //Update the vegetable state to Chopped
         vegetable.UpdateState(VegetableState.Chopped);
         //Clear the chopping board for the next vegetable
